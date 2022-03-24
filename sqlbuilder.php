@@ -577,12 +577,12 @@ class InsertQuery{
         return $this;
     }
     public function clean(){
-        for($i = 0 ;$i<$this->values;$i++){
-            if($this->values[$i]."" == ""){
-                array_splice($this->values,$i,1);
-                $i--;
+        foreach($this->values as $k=>$v){
+            if($v."" == ""){
+                unset($this->values[$k]);
             }
         }
+        
         return $this;
     }
     public function add($k,$v)

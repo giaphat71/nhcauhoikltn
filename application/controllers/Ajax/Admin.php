@@ -1,5 +1,4 @@
 <?php
-
 $output = "";
 $p = $_POST;
 $ajax = $p['ajax'] ?? "";
@@ -180,6 +179,7 @@ try {
             }
         }
         if($ajax=="addcanbo"){
+            
             $account = $p['account'] ?? "";
             $name = $p['name'] ?? "";
             $password = $p['password'] ?? "";
@@ -196,6 +196,7 @@ try {
                 die("Tên tài khoản đăng nhập không thể chứa ký tự đặc biệt.");
             }
             $password = hashPassword($account,$password);
+            
             $insert =buildInsert([
                 "account"=>$account,
                 "password"=>$password,
@@ -205,6 +206,7 @@ try {
                 "donvi"=>$donvi,
                 "isaccept"=>1
             ])->clean()->exec("users");
+            
             if($insert){
                 die("Thêm thành công");
             }else{
@@ -253,5 +255,5 @@ try {
 } catch (\Exception $e) {
     $output += $e;
 }
-echo $output;
+die($output);
 ?>
