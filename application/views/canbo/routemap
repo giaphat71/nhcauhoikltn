@@ -1,0 +1,9 @@
+#root=/canbo/
+list-monhoc table type=listmonhoc
+list-cauhoi/([0-9]+) listcauhoi idmonhoc=$1
+themcauhoi/([0-9]+) themcauhoi idmonhoc=$1
+taomatrix/([0-9]) matrix idmonhoc=$1
+matrix/([0-9]) listmatran idmonhoc=$1
+matrix/([0-9])/([a-zA-Z0-9])/? matrix idmonhoc=$1 idmatrix=$2
+runmatrix/([0-9])/([0-9])/? ketquamatran idmonhoc=$1 idmatrix=$2
+runmatrix/([0-9])/([0-9])/([0-9])/? ketquamatran idmonhoc=$1 idmatrix=$2 runcount=$3

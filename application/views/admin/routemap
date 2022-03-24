@@ -1,0 +1,10 @@
+#root=/admin/
+monhoc/add themmonhoc
+canbo/add themcanbo
+monhoc/cauhoi/([a-zA-Z0-9]+) monhoc-cauhoi idmonhoc=$1
+monhoc/canbo/([a-zA-Z0-9]+) monhoc-canbo idmonhoc=$1
+monhoc/([a-zA-Z0-9]+) themmonhoc idmonhoc=$1
+canbo/([a-zA-Z0-9]+) canbodetail idcanbo=$1
+canbo/([a-zA-Z0-9]+)/monhoc canbo-monhoc idcanbo=$1
+canbo/([a-zA-Z0-9]+)/monhoc/([a-zA-Z0-9]+) canbo-monhoc-cauhoi idcanbo=$1 idmonhoc=$2
+canbo/([a-zA-Z0-9]+)/([a-zA-Z0-9]+) canbodetail idcanbo=$1 idmonhoc=$2

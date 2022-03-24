@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><?= "Ngân hàng câu hỏi Đại Học Tiền Giang" ?></title>
+    <script src="/jqr.js"></script>
+    <script src="/javascripts/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="/main.css?v=42">
+    <link rel="stylesheet" href="/all.min.css">
+    <link rel="stylesheet" href="/bootstrap.min.css?origin=">
+    <link rel="stylesheet" href="/font.css?v=2">
+
+    <script type="text/javascript" src="/stv.ui.js?v=1.181"></script>
+    <script src="/bootstrap.min.js"></script>
+    
+    <style>
+        .channel{
+            padding: 8px;
+            background: rgb(236, 236, 236);
+            border-radius: 12px;
+            margin-bottom: 6px;
+        }
+        .channel .option{
+            float: right;
+        }
+        #avatar{
+            width: 40px;height: 40px;
+            border-radius:50%;
+        }
+        #logo{
+            width: 250px;height: 50px;
+        }
+        .navbar{
+            background: url(http://qldt.tgu.edu.vn/templates/tgu/images/bg_banner.png) repeat-x right bottom #FFFFFF;
+        }
+        #search{
+            border-radius: 6px;
+            border:none;
+            outline: none;
+            padding: 4px;
+        }
+        #adminnav{
+            background: linear-gradient(180deg, #105391, #5ad0ff);
+        }
+        #adminnav > a{
+            display:block;
+            font-size:20px;
+            color:white;
+            line-height: 2;
+        }
+        #adminnav > a[active]{
+            border-right: 3px solid #ff6a00;
+            margin-right: -15px;
+            color:#ff6a00;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="navbar d-flex p-2">
+        <img id="logo" src="http://qldt.tgu.edu.vn/templates/tgu/images/banner.png">
+        <div style="flex:1;text-align:right;">
+            <div style="position: relative;display:inline-block;">
+                <input id="search" type="text" placeholder="Tìm kiếm">
+                <span style="font-size:20px;position:absolute;right:5px;top:0;cursor: pointer;">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+            <div style="position: relative;display:inline-block;">
+                <img id="avatar" src="http://sangtacviet.com/default.png">
+                <div style="display: none;position: absolute;">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding: 0 15px;">
+    <div id="adminnav" class="col-3">
+        <? $catid=$catid??"home";?>
+        <a href="/admin/" <?=($catid=="home")?"active":""?>>Trang chủ</a>
+        <a href="/admin/monhoc" <?=$catid=="qlmh"?"active":""?>>Quản lý môn học</a>
+        <a href="/admin/canbo" <?=$catid=="qlcb"?"active":""?>>Quản lý cán bộ</a>
+        <a href="/admin/tieuchi" <?=$catid=="qltc"?"active":""?>>Quản lý tiêu chí</a>
+        <a href="/admin/thongke" <?=$catid=="tk"?"active":""?>>Thống kê</a>
+        <a href="/admin/account" <?=$catid=="acc"?"active":""?>>Tài khoản</a>
+    </div>
+    <div id="admincontent" class="col-9 bg-light" style="padding:0;border-right: 2px solid #0f5491;min-height: 100vh;">

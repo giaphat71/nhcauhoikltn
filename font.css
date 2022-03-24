@@ -1,0 +1,24 @@
+@font-face{
+	font-family: linotype;
+	src: url('/font/pala.ttf');
+}
+@font-face {
+  font-family: notosans;
+  src: url(/font/NotoSans-Regular.ttf);
+}
+@font-face {
+  font-family: nunitoblack;
+  src: url(/font/Nunito-Black.ttf);
+}
+@font-face {
+  font-family: nunito;
+  src: url(/font/Nunito-Regular.ttf);
+}
+@font-face {
+  font-family: worksans;
+  src: url(/font/WorkSans-VariableFont_wght.ttf);
+}
+@font-face {
+  font-family: quicksans;
+  src: url(/font/Quicksand-VariableFont_wght.ttf);
+}
