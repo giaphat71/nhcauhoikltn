@@ -97,6 +97,8 @@ include "header.htm";
         border-radius: 4px;
         background: white;
         border: none;
+        margin-bottom: 6px;
+        display: inline-block;
     }
     .tag.disabled {
         background: #eee;
@@ -118,10 +120,10 @@ include "header.htm";
     <div class="section-body">
         <input id="name" class="form-control mb-4" placeholder="Tên ma trận đề" value="<?=$idmatrix?$matrix->name:""?>">
         <input id="description" class="form-control mb-4" placeholder="Giới thiệu (Optional)" value="<?=$idmatrix?$matrix->description:""?>">
-        <input id="totalpoint" onchange="countTotalQuest()" class="form-control mb-4" placeholder="Tổng số điểm" value="<?=$idmatrix?$matrix->totalpoint:""?>">
+        <input hidden id="totalpoint" value="10" onchange="countTotalQuest()" class="form-control mb-4" placeholder="Tổng số điểm" value="<?=$idmatrix?$matrix->totalpoint:""?>">
         <br>
         <p style="font-size: 22px;">Chi tiết ma trận
-            <span style="float: right;">Tổng số câu hỏi: <span id="questcount">0</span>, mỗi câu <span id="pointperquest">0</span>đ.</span>
+            <span hidden style="float: right;">Tổng số câu hỏi: <span id="questcount">0</span>, mỗi câu <span id="pointperquest">0</span>đ.</span>
         </p>
         <div class="" id="ground-block">
             <div id="ground"></div>
@@ -146,6 +148,7 @@ include "header.htm";
         </div>
         <script>
         <?php
+            // thống kê tất cả các nhãn dán
             $list = $tags->statTagsFor($idmonhoc);
             echo "var context=$idmonhoc;\n";
             echo "var list = ".json_encode($list).";";
@@ -155,6 +158,7 @@ include "header.htm";
             }
         ?>
             var currentmodify = null;
+            // event tự động đếm điểm số
             function countquestchange(){
                 if(!String.fromCharCode(event.keyCode).match(/[0-9]+/) && event.keyCode != 8 && event.keyCode != 46 && event.keyCode != 37 && event.keyCode != 39){
                     event.preventDefault();
@@ -164,12 +168,14 @@ include "header.htm";
                 },200);
                 
             }
+            
             function indexTag(){
                 window.tagslist ={};
                 for(var i=0; i<list.length; i++){
                     window.tagslist[list[i].sign] = list[i];
                 }
             }
+            // hiện giao diện sửa nhóm câu hỏi
             function modifyGroup(g){
                 currentmodify = g;
                 var wd = ui.win.create("Nhóm câu hỏi");
@@ -216,6 +222,7 @@ include "header.htm";
                 }
                 wd.show();
             }
+            // lọc các nhãn đã được sử dụng
             function filterTagAvailable(t){
                 var usedtag = q("#md-top span");
                 var unusedtag = q("#md-bottom span");
@@ -234,6 +241,7 @@ include "header.htm";
                     }
                 }
             }
+            // hàm tạo tag html
             function createTag(tag){
                 if(!tag.name){
                     tag = getTagFromNV(tag);
@@ -245,6 +253,7 @@ include "header.htm";
                     span.className="tag";
                 return span;
             }
+            // tạo thêm nhóm câu hỏi
             function addGroup(modify = true){
                 var tmpl = g("tmplmatrix").innerHTML;
                 var groupname = "Nhóm câu hỏi ";
@@ -254,11 +263,16 @@ include "header.htm";
                 g("ground").appendChild(div.children[0]);
                 if(modify)modifyGroup(group);
             }
+            // xóa nhóm câu hỏi
             function removeGroup(g){
                 if(confirm("Xác nhận xóa nhóm này?")){
-                    g.parentElement.removeChild(g);
+                    while(g.className.indexOf("matrix-group") < 0){
+                        g = g.parentElement;
+                    }
+                    g.remove();
                 }
             }
+            // hiển thị dữ liệu nhóm đã có
             function loadGroup(){
                 if(window.matrix){
                     for(var i = 0; i <matrix.length; i++){
@@ -282,6 +296,7 @@ include "header.htm";
                 }
 
             }
+            // lưu trữ dữ liệu nhóm câu hỏi
             function saveModify(){
                 var group = currentmodify;
                 if(!group){
@@ -291,6 +306,7 @@ include "header.htm";
                 currentmodify = null;
                 countTotalQuest();
             }
+            // đếm số câu hỏi và điểm số
             function countTotalQuest(){
                 var total = 0;
                 var groups = q("#ground .matrix-group");
@@ -305,6 +321,7 @@ include "header.htm";
                     g("pointperquest").innerHTML = maxpoints/total;
                 }
             }
+            // lưu trữ ma trận vào hệ thống hoặc tạo mới khi chưa có
             function saveMatrix(){
                 var groups = g("ground").querySelectorAll(".matrix-group");
                 var matrix = [];
@@ -360,6 +377,7 @@ include "header.htm";
                 }
                 xhr.send(new URLSearchParams(data).toString());
             }
+            // các hàm tìm nhãn
             function getTagFromSign(sign){
                 return list.filter(function(tag){
                     return tag.sign == sign;
@@ -373,6 +391,7 @@ include "header.htm";
                     return t.slugname == tag.slugname && t.value == tag.value;
                 })[0];
             }
+            // chạy ma trận
             function runMatrix(){
                 location.href = "/canbo/runmatrix/"+context+"/"+idmatrix;
             }

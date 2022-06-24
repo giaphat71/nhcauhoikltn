@@ -6,6 +6,7 @@ class Admin extends CI_Controller
     public function index()
     {
         checkLogin();
+        requireAdmin();
         $this->load->view('admin/index.php');
     }
     public function ajax()
@@ -14,6 +15,14 @@ class Admin extends CI_Controller
     }
     public function _remap($method, $params = array())
     {
+        disableDebug();
+        if($method!=="ajax")
+        {
+            requireAdmin();
+        }else{
+            return call_user_func_array(array($this, $method), $params);
+        }
+        
         $uri = explode("?",$_SERVER['REQUEST_URI'])[0];
         $route = parseRouteMap("admin/routemap",$uri);
         if($route){

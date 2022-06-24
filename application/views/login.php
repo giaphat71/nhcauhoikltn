@@ -21,10 +21,12 @@
 </head>
 
 <body style="font-family: nunito;">
-    <div class="container shadow-lg rounded bg-light" style="margin: 4rem auto;">
+    <div class="container shadow-lg rounded bg-light" style="margin: 4rem auto;padding:0;border-radius:12px !important;overflow:hidden;">
+        <div style="text-align:center;font-size:24px;padding: 4px;background:#007bff;color:white;">Đăng nhập vào hệ thống quản lý ngân hàng câu hỏi</div>
+        
         <form class="text-center border border-light p-5" style="max-width: 480px; margin-top: 72px;margin:auto;">
 
-            <p class="h4 mb-4">Đăng nhập</p>
+            
         
             <!-- Email -->
             <input type="account" id="account" class="form-control mb-4" placeholder="Tài khoản">
@@ -35,6 +37,11 @@
             <button color="info" block="true" class="btn btn-primary" type="button" onclick="login()">Đăng nhập</button>
         
         </form>
+        <hr>
+        <div class="text-center">
+            <a class="small" href="/user/register">Chưa có tài khoản? Nhấp đăng ký..</a>
+            <br><br>
+        </div>
     </div>
     <script>
         ui.scriptmanager.load("/javascripts/mainadmin.js?r="+Math.random());

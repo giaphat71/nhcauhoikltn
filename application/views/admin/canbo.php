@@ -12,7 +12,13 @@ if($nganh){
     $ft->addLike("donvi", $nganh);
 }
 $pageu = $g['pageu'] ?? 0;
-$listcb= $ft->project("users.*, count(permission.id) as num")->groupBy("users.id")->leftJoin("permission","permission.idcanbo=users.id")->limit(20)->paginate(20,(int)$pageu)->exec("users") ?? [];
+$listcb= $ft->
+    project("users.*, count(permission.id) as num")
+    ->groupBy("users.id")
+    ->leftJoin("permission","permission.idcanbo=users.id")
+    ->limit(20)
+    ->paginate(20,(int)$pageu)
+    ->exec("users") ?? [];
 if(!$listcb){
     $listcb = [];
     $total = 0;
@@ -20,11 +26,11 @@ if(!$listcb){
     $total = $listcb[0]->total;
 }
 $listcbdk= buildSearch(['isaccept'=>0])->limit(100)->exec("users") ?? [];
-if(!$listcb){
-    $listcb = [];
-    $total = 0;
+if(!$listcbdk){
+    $listcbdk = [];
+    $totalk = 0;
 }else{
-    $total = $listcb[0]->total;
+    $totalk = $listcbdk[0]->total;
 }
 $catid = "qlcb";
 include "header.htm" ?>
@@ -95,6 +101,7 @@ include "header.htm" ?>
                         <td>Môn học</td>
                         <td>Sửa thông tin</td>
                         <td>Khóa</td>
+                        <td>Quyền</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,7 +114,10 @@ include "header.htm" ?>
                         <td><?=$listcb[$i]->num?></td>
                         <td><a href="/admin/canbo/<?=$listcb[$i]->id?>/monhoc">Xem</a></td>
                         <td><a href="/admin/canbo/<?=$listcb[$i]->id?>">Sửa</a></td>
-                        <td><a href="javascript:" onclick="lockUser(this,<?=$listcb[$i]->id?>)">Khóa tài khoản</a></td>
+                        <td><a href="javascript:" onclick="lockUser(this,<?=$listcb[$i]->id?>)">
+                                <?=$listcb[$i]->islocked?"Mở khóa":"Khóa"?>
+                        </a></td>
+                        <td><a href="/admin/canbo/<?=$listcb[$i]->id?>/quyen">Điều chỉnh</a></td>
                     </tr>
                 <? } ?>
                 </tbody>
@@ -159,6 +169,25 @@ include "header.htm" ?>
                 var b = await a.text();
                 if(b=="success"){
                     btn.parentElement.parentElement.style.background = "#c3f9c3;";
+                }
+            });
+        }
+        function lockUser(btn,id){
+            fetch("/admin/ajax",{
+                method: "POST",
+                headers: {"content-type": "application/x-www-form-urlencoded"},
+                body: "ajax=lockuser&id="+id
+            }).then(async a=>{
+                var b = await a.text();
+                if(b=="success"){
+                    btn.parentElement.parentElement.style.background = "#c3f9c3;";
+                    if(btn.textContent.contain("Khóa")){
+                        btn.textContent = "Mở khóa";
+                    }else{
+                        btn.textContent = "Khóa";
+                    }
+                }else{
+                    alert(b);
                 }
             });
         }

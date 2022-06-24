@@ -33,7 +33,7 @@ include "header.htm" ?>
         }
     </style>
     <div class="section bg-light">
-        <div class="section-title">Thêm môn học mới</div>
+        <div class="section-title"><?=($id)?"Thông tin môn học":"Thêm môn học mới"?></div>
         <div class="section-body">
             <p>Mã học phần</p>
             <input class="form-control" type="text" id="idmonhoc" <?=$isupdate?"disabled":""?> value="<?=$isupdate?$mh->mamonhoc:""?>">

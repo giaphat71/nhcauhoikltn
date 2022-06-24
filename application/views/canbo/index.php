@@ -29,24 +29,26 @@ include "header.htm" ?>
             font-size: 24px;
             font-weight: bold;
             display: inline-block;
-            border-bottom: 1px solid gray;
             margin-bottom: 6px;
         }
         .section{
             padding: 8px;
         }
+        
     </style>
     <div class="section bg-light">
-        <div class="section-title">Các học phần của tôi</div>
+        <div class="section-title">Chọn một môn học để bắt đầu</div>
         <div class="section-body">
+            <div class="flex" style="flex-wrap: wrap;">
             <? for ($i = 0;$i<count($listmh);$i++){ ?>
-                <div class="monhoc">
+                <div class="monhoc col-4">
                     <a href="/canbo/list-cauhoi/<?=$listmh[$i]->id?>">
                         <div class="monhoc-title"><?=$listmh[$i]->name?></div>
                         <div class="monhoc-num">Số câu hỏi: <?=$listmh[$i]->num?></div>
                     </a>
                 </div>
             <? } ?>
+            </div>
         </div>
     </div>
 <? include "footer.htm" ?>

@@ -49,7 +49,7 @@ include "header.htm"; ?>
             <p>Đơn vị</p>
             <input class="form-control" type="text" id="donvi"><br>
             <p>Avatar</p>
-            <input class="form-control" type="text" id="avatar"><br><br>
+            <input class="form-control" type="text" id="iavatar" value="/images/defaultavatar.png"><br><br>
             <center><button type="button" class="btn btn-primary" onclick="addCanbo()">Lưu trữ</button></center>
             </form>
         </div>
@@ -70,7 +70,7 @@ include "header.htm"; ?>
         }
         function addCanbo(){
             // account password name donvi avatar
-            var param = `ajax=addcanbo&account=${v("account")}&password=${v("password")}&name=${v("name")}&donvi=${v("donvi")}&avatar=${v("avatar")}`;
+            var param = `ajax=addcanbo&account=${v("account")}&password=${v("password")}&name=${v("name")}&donvi=${v("donvi")}&avatar=${v("iavatar")}`;
             fetch("/admin/ajax",{
                 method: "POST",
                 headers: {"Content-Type": "application/x-www-form-urlencoded"},

@@ -66,5 +66,25 @@
                 }else alert(response);
             })
         }
+        function register(){
+            var pass = val("password");
+            var nick = val("account");
+            var email = val("email");
+            var name = val("name");
+            var donvi = val("donvi");
+            fetch("/admin/ajax",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `ajax=register&account=${nick}&password=${pass}&email=${email}&name=${name}&donvi=${donvi}`
+            }).then(function(response){
+                return response.text();
+            }).then(function(response){
+                if(response=="success"){
+                    location.href="/canbo";
+                }else alert(response);
+            });
+        }
     </script>
 </html>

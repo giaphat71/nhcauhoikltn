@@ -4,7 +4,7 @@ $quest=getModule("quest");
 checkLogin();
 $pageq = $_GET['pageq'] ?? 0;
 $mh = buildSearch(["id"=>$idmonhoc])->exec("monhoc");
-$listq = buildSearch(["idmonhoc"=>$idmonhoc])->limit(20)->paginate(20,$pageq)->exec("cauhoi") ?? [];
+$listq = buildSearch(["idmonhoc"=>$idmonhoc,"author"=>$idcanbo])->limit(20)->paginate(20,$pageq)->exec("cauhoi") ?? [];
 
 $catid="qlmh";
 include "header.htm" ?>
@@ -36,7 +36,7 @@ include "header.htm" ?>
         }
     </style>
     <div class="section bg-light">
-        <div class="section-title">Các câu hỏi của môn học này</div>
+        <div class="section-title">Các câu hỏi của môn học và cán bộ này</div>
         <div class="section-body">
             <? for($i=0; $i<count($listq); $i++){ 
                 $q = Question::GetQuestByType($listq[$i]->type)->load($listq[$i]);

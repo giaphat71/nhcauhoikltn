@@ -1,8 +1,24 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+
 
 a {
   color: #00B7FF;
+}
+.showans::first-letter{
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+.pip-input{
+  background-color: transparent;
+  border:none;
+  border-bottom: 2px dashed gray;
+}
+.cp-item{
+  border-radius: 6px;
+  border: 2px solid gray;
+  margin-bottom: 8px;
+  text-align: center;
+  padding: 4px;
+}
+a:hover{
+  text-decoration: none;
 }

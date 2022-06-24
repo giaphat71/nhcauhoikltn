@@ -1,82 +1,20 @@
-###################
-What is CodeIgniter
-###################
-
-CodeIgniter is an Application Development Framework - a toolkit - for people
-who build web sites using PHP. Its goal is to enable you to develop projects
-much faster than you could if you were writing code from scratch, by providing
-a rich set of libraries for commonly needed tasks, as well as a simple
-interface and logical structure to access these libraries. CodeIgniter lets
-you creatively focus on your project by minimizing the amount of code needed
-for a given task.
-
-*******************
-Release Information
-*******************
 
 Danh sách route
 ===============
 
-/admin/ trang quản trị
-/canbo/ trang chủ cán bộ
-/canbo/matrix/<id môn học> Danh sách các ma trận đã lưu của môn học
-/canbo/matrix/<id môn học>/<id ma trận> Xem thông tin ma trận
-/canbo/runmatrix/<id môn học>/<id ma trận> Chạy ma trận
-/canbo/runmatrix/<id môn học>/<id ma trận>/<số lượng đề> Chạy ma trận với số lượng đề
-/canbo/runmatrix/<id môn học>/<id ma trận>/?allowshare=false Chạy ma trận nhưng không bao gồm các câu hỏi được chia sẻ
-/canbo/runmatrix/<id môn học>/<id ma trận>/<số lượng đề>/?allowshare=false Chạy ma trận với số lượng đề nhưng không bao gồm các câu hỏi được chia sẻ
-/canbo/taomatrix/<id môn học> Tạo ma trận mới cho môn học
-/canbo/list-cauhoi/<id môn học> Danh sách câu hỏi của môn học
-/canbo/themcauhoi/<id môn học> Thêm cau hỏi cho môn học
+| /admin/ trang quản trị
+| /canbo/ trang chủ cán bộ
+| /canbo/matrix/<id môn học> Danh sách các ma trận đã lưu của môn học
+| /canbo/matrix/<id môn học>/<id ma trận> Xem thông tin ma trận
+| /canbo/runmatrix/<id môn học>/<id ma trận> Chạy ma trận
+| /canbo/runmatrix/<id môn học>/<id ma trận>/<số lượng đề> Chạy ma trận với số lượng đề
+| /canbo/runmatrix/<id môn học>/<id ma trận>/?allowshare=false Chạy ma trận nhưng không bao gồm các câu hỏi được chia sẻ
+| /canbo/runmatrix/<id môn học>/<id ma trận>/<số lượng đề>/?allowshare=false Chạy ma trận với số lượng đề nhưng không bao gồm các câu hỏi được chia sẻ
+| /canbo/taomatrix/<id môn học> Tạo ma trận mới cho môn học
+| /canbo/list-cauhoi/<id môn học> Danh sách câu hỏi của môn học
+| /canbo/themcauhoi/<id môn học> Thêm cau hỏi cho môn học
 
-**************************
-Changelog and New Features
-**************************
+Cài đặt
+===============
+| Sử dụng git clone để tải file, sau đó copy vào thư mục htdocs hay www, public_html của máy chủ
 
-You can find a list of all changes for each release in the `user
-guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/changelog.rst>`_.
-
-*******************
-Server Requirements
-*******************
-
-PHP version 5.6 or newer is recommended.
-
-It should work on 5.3.7 as well, but we strongly advise you NOT to run
-such old versions of PHP, because of potential security and performance
-issues, as well as missing features.
-
-************
-Installation
-************
-
-Please see the `installation section <https://codeigniter.com/userguide3/installation/index.html>`_
-of the CodeIgniter User Guide.
-
-*******
-License
-*******
-
-Please see the `license
-agreement <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/license.rst>`_.
-
-*********
-Resources
-*********
-
--  `User Guide <https://codeigniter.com/docs>`_
--  `Contributing Guide <https://github.com/bcit-ci/CodeIgniter/blob/develop/contributing.md>`_
--  `Language File Translations <https://github.com/bcit-ci/codeigniter3-translations>`_
--  `Community Forums <http://forum.codeigniter.com/>`_
--  `Community Wiki <https://github.com/bcit-ci/CodeIgniter/wiki>`_
--  `Community Slack Channel <https://codeigniterchat.slack.com>`_
-
-Report security issues to our `Security Panel <mailto:security@codeigniter.com>`_
-or via our `page on HackerOne <https://hackerone.com/codeigniter>`_, thank you.
-
-***************
-Acknowledgement
-***************
-
-The CodeIgniter team would like to thank EllisLab, all the
-contributors to the CodeIgniter project and you, the CodeIgniter user.

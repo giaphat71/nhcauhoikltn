@@ -3,7 +3,6 @@
 checkLogin();
 $u = getUser();
 
-$catid="acc";
 include "header.htm" ?>
     <style>
         .section-title{
@@ -42,7 +41,7 @@ include "header.htm" ?>
             var nganh = $("#nganh").val();
             var avatar = $("#iavatar").val();
             $.ajax({
-                url: "/admin/ajax",
+                url: "/canbo/ajax",
                 type: "POST",
                 data: {
                     name: name,
@@ -93,7 +92,7 @@ include "header.htm" ?>
             var newPass = $("#newPass").val();
             var newPass2 = $("#newPass2").val();
             $.ajax({
-                url: "/admin/ajax",
+                url: "/canbo/ajax",
                 type: "POST",
                 data: {
                     oldPass: oldPass,

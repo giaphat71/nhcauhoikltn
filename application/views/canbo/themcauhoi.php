@@ -1,6 +1,13 @@
 <?
 checkLogin();
 $quest = getModule("quest");
+$idcauhoi = $idcauhoi ?? 0;
+if($idcauhoi){
+    $cauhoi = buildSearch(["id"=>$idcauhoi])->exec("cauhoi");
+    if(!$cauhoi){
+        die("Không tìm thấy câu hỏi này.");
+    }
+}
 include "header.htm";
 ?>
 <style>
@@ -74,22 +81,22 @@ include "header.htm";
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.10.3/tinymce.min.js" referrerpolicy="origin"></script>
 
 <div class="section bg-light">
-    <div class="section-title">Thêm câu hỏi cho học phần
-        
+    <div class="section-title">
+        <? if($idcauhoi) echo "Sửa câu hỏi"; else echo "Thêm câu hỏi cho học phần"; ?>
     </div>
     <div class="section-body">
         <p>Loại câu hỏi 
-            <select class="form-control" onchange="changeqtype(this.value)">
+            <select id="questtype" class="form-control" onchange="changeqtype(this.value)" value="<?=$idcauhoi?$cauhoi->type:""?>">
                 <option value="choosethebest">Chọn đáp án đúng</option>
                 <option value="checkalltrue">Chọn các đáp án đúng</option>
                 <option value="askandanswer">Câu hỏi tự luận</option>
-                <option value="connectpair">Nối câu/ảnh</option>
+                <option value="connectpair">Nối câu</option>
                 <option value="putinplace">Điền vào chỗ trống</option>
             </select>
         </p>
         <div>
             <p>Nội dung câu hỏi</p>
-            <textarea id="questtext" class="form-control" placeholder="Nội dung câu hỏi">Một cộng một bằng mấy?</textarea>
+            <textarea id="questtext" class="form-control" placeholder="Nội dung câu hỏi"><? if($idcauhoi) echo $cauhoi->text;?></textarea>
             <br>
         </div>
 
@@ -100,46 +107,59 @@ include "header.htm";
                     <form>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-info" onclick="ctb_AddAns(this)"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-info" onclick="ctb_RemAns(this)"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.addAnswer(this)"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.removeAnswer(this)"><i class="fa fa-minus"></i></button>
                             </div>
-                            <input type="text" placeholder="Đáp án" class="form-control">
+                            <input onkeydown="choosethebest.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control" value="Đáp án 1">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-success" onclick="ctb_MarkRight(this)"><i class="fa fa-check"></i></button>
+                                <button type="button" class="btn btn-success" onclick="choosethebest.markRight(this)"><i class="fa fa-check"></i></button>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-info" onclick="ctb_AddAns(this)"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-info" onclick="ctb_RemAns(this)"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.addAnswer(this)"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.removeAnswer(this)"><i class="fa fa-minus"></i></button>
                             </div>
-                            <input type="text" placeholder="Đáp án" class="form-control">
+                            <input onkeydown="choosethebest.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control" value="Đáp án 2">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-primary" onclick="ctb_MarkRight(this)"><i class="fa fa-times"></i></button>
+                                <button type="button" class="btn btn-primary" onclick="choosethebest.markRight(this)"><i class="fa fa-times"></i></button>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-info" onclick="ctb_AddAns(this)"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-info" onclick="ctb_RemAns(this)"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.addAnswer(this)"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.removeAnswer(this)"><i class="fa fa-minus"></i></button>
                             </div>
-                            <input type="text" placeholder="Đáp án" class="form-control">
+                            <input onkeydown="choosethebest.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control" value="Đáp án 3">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-primary" onclick="ctb_MarkRight(this)"><i class="fa fa-times"></i></button>
+                                <button type="button" class="btn btn-primary" onclick="choosethebest.markRight(this)"><i class="fa fa-times"></i></button>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-info" onclick="ctb_AddAns(this)"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-info" onclick="ctb_RemAns(this)"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.addAnswer(this)"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.removeAnswer(this)"><i class="fa fa-minus"></i></button>
                             </div>
-                            <input type="text" placeholder="Đáp án" class="form-control">
+                            <input onkeydown="choosethebest.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control" value="Đáp án 4">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-primary" onclick="ctb_MarkRight(this)"><i class="fa fa-times"></i></button>
+                                <button type="button" class="btn btn-primary" onclick="choosethebest.markRight(this)"><i class="fa fa-times"></i></button>
                             </div>
                         </div>
                     </form>
-                    
+                    <div class="row">
+                        <!-- toggle -->
+                        <div class="col-md-6">
+                            <div class="toggle-switch">
+                                <label class="switch">
+                                    <input id="ctb-lockans" type="checkbox" <?= $cauhoi->data->lockposition ?? false ? "checked" : "" ?>>
+                                    <span class="slider round"></span>
+                                </label>
+                                <label>
+                                    <span>Khóa vị trí đáp án</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="checkalltrue" hidden>
@@ -148,42 +168,42 @@ include "header.htm";
                     <form>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-info" onclick="cat_AddAns(this)"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-info" onclick="ctb_RemAns(this)"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="checkalltrue.addAnswer(this)"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.removeAnswer(this)"><i class="fa fa-minus"></i></button>
                             </div>
-                            <input type="text" placeholder="Đáp án" class="form-control">
+                            <input onkeydown="choosethebest.keyup(this);;" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-success" onclick="cat_MarkRight(this)"><i class="fa fa-check"></i></button>
+                                <button type="button" class="btn btn-success" onclick="checkalltrue.markRight(this)"><i class="fa fa-check"></i></button>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-info" onclick="cat_AddAns(this)"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-info" onclick="ctb_RemAns(this)"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="checkalltrue.addAnswer(this)"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.removeAnswer(this)"><i class="fa fa-minus"></i></button>
                             </div>
-                            <input type="text" placeholder="Đáp án" class="form-control">
+                            <input onkeydown="choosethebest.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-success" onclick="cat_MarkRight(this)"><i class="fa fa-check"></i></button>
+                                <button type="button" class="btn btn-success" onclick="checkalltrue.markRight(this)"><i class="fa fa-check"></i></button>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-info" onclick="cat_AddAns(this)"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-info" onclick="ctb_RemAns(this)"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="checkalltrue.addAnswer(this)"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.removeAnswer(this)"><i class="fa fa-minus"></i></button>
                             </div>
-                            <input type="text" placeholder="Đáp án" class="form-control">
+                            <input onkeydown="choosethebest.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-primary" onclick="cat_MarkRight(this)"><i class="fa fa-times"></i></button>
+                                <button type="button" class="btn btn-primary" onclick="checkalltrue.markRight(this)"><i class="fa fa-times"></i></button>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-info" onclick="cat_AddAns(this)"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-info" onclick="ctb_RemAns(this)"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="checkalltrue.addAnswer(this)"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-info" onclick="choosethebest.removeAnswer(this)"><i class="fa fa-minus"></i></button>
                             </div>
-                            <input type="text" placeholder="Đáp án" class="form-control">
+                            <input onkeydown="choosethebest.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-primary" onclick="cat_MarkRight(this)"><i class="fa fa-times"></i></button>
+                                <button type="button" class="btn btn-primary" onclick="checkalltrue.markRight(this)"><i class="fa fa-times"></i></button>
                             </div>
                         </div>
                     </form>
@@ -193,6 +213,47 @@ include "header.htm";
             <div id="askandanswer" hidden>
                 <p>Đáp án</a>
                 <textarea id="aaa-ans" class="form-control"></textarea>
+            </div>
+            <div id="putinplace" hidden>
+                <div class="alert-info p-3 rounded">
+                    Dùng <b>tô đen</b> để biểu thị vị trí cần điền vào và đáp án của nó, ví dụ "Đây là một <b>đáp án</b> đúng" thì cụm từ "đáp án" sẽ thay bằng chỗ trống.
+                </div>
+            </div>
+            <div id="connectpair" hidden>
+                <div id="cp-ans" style="min-height: 240px;width:100%;border-radius: 6px; padding: 6px; background: white;display:flex;">
+                    <div id="cp-col-l" class="col-6" style="flex:1;background: #eee;border-radius: 6px;padding: 8px;">
+                        <div class="cp-ans">
+                            <div class="input-group cp-pair">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn btn-info" onclick="connectpair.removeAnswer(this,false)"><i class="fa fa-minus"></i></button>
+                                </div>
+                                <input onkeydown="connectpair.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-success cp-connector" onclick="connectpair.connector(this,false)"><i class="fa fa-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-info w-100" onclick="connectpair.addAnswer(this,false)"><i class="fa fa-plus"></i> Thêm đáp án</button>
+                    </div>
+                    <div id="cp-connect" style="width: 160px;">
+                        <canvas style="margin-top:8px" id="cp-canvas" width="160" height="100"></canvas>
+                    </div>
+                    <div id="cp-col-r" class="col-6" style="flex:1;background: #eee;border-radius: 6px;padding: 8px;">
+                        <div class="cp-ans">
+                            <div class="input-group cp-pair">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn btn-success cp-connector" onclick="connectpair.connector(this,true)"><i class="fa fa-arrow-left"></i></button>
+                                    
+                                </div>
+                                <input onkeydown="connectpair.keyup(this);" onchange="mathCheck(this)" type="text" placeholder="Đáp án" class="form-control">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-info" onclick="connectpair.removeAnswer(this,true)"><i class="fa fa-minus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-info w-100" onclick="connectpair.addAnswer(this,true)"><i class="fa fa-plus"></i> Thêm đáp án</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div>
@@ -212,16 +273,21 @@ include "header.htm";
         <button class="btn btn-primary" type="button" onclick="savequest(true)">Lưu và thêm tiếp</button></center>
     </div>
 </div>
+<script type="text/javascript" src="/javascripts/questedit.js"></script>
 <script type="text/javascript">
     var context=<?=$idmonhoc?>;
     var qtype = "choosethebest";
     function savequest(isreload){
         var text= encodeURIComponent(tinyMCE.activeEditor.getContent());
         var data = encodeURIComponent(getDataByType());
+        var endpoint = "addquestion";
+        if(window.quest){
+            endpoint = "updatequestion&idquest="+quest.id;
+        }
         fetch("/user/ajax",{
             method:"POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded"},
-            body: `ajax=addquestion&idmonhoc=${context}&type=${qtype}&text=${text}&tags=${getTags()}&data=${data}`
+            body: `ajax=${endpoint}&idmonhoc=${context}&type=${qtype}&text=${text}&tags=${getTags()}&data=${data}`
         }).then(t=>t.text()).then(t=>{
             alert(t);
             if(isreload){
@@ -231,27 +297,22 @@ include "header.htm";
     }
     function getDataByType(){
         if(qtype=="choosethebest"){
-            return ctb_Data();
+            return choosethebest.toData();
+        }
+        if(qtype=="checkalltrue"){
+            return checkalltrue.toData();
+        }
+        if(qtype=="askandanswer"){
+            return askandanswer.toData();
+        }
+        if(qtype=="putinplace"){
+            return putinplace.toData();
+        }
+        if(qtype=="connectpair"){
+            return connectpair.toData();
         }
     }
-    function getTags(){
-        var tags = q("#tags > span");
-        var list = [];
-        for(var i=0;i<tags.length;i++){
-            list.push({
-                slugname:tags[i].data.slugname,
-                value: tags[i].getAttribute("value")
-            });
-        }
-        return encodeURIComponent(JSON.stringify(list));
-    }
-    function ctb_Data(){
-        var obj = {
-            answer:Array.from(g("ctb-ans").querySelectorAll("input")).map(i=>i.value.trim()),
-            rightanswer: g("ctb-ans").querySelector(".fa-check").parentElement.parentElement.previousElementSibling.value.trim(),
-        };
-        return JSON.stringify(obj);
-    }
+   
     q(".tag-pr").forEach(function(e){
         e.data = JSON.parse(decodeURIComponent(e.getAttribute('data')));
         e.removeAttribute("data");
@@ -266,130 +327,35 @@ include "header.htm";
             }
         }
     });
-    function showAssignValue(tag){
-        if(tag.data.type=="array"){
-            var sel = ui.select("Chọn lựa");
-            for(var i=0;i<tag.data.valuerange.length;i++){
-                sel.option(tag.data.valuerange[i],tag.data.valuerange[i]);
-            }
-            sel.proc = function(v){
-                
-                tag.setAttribute("value",v);
-                tag.setAttribute("hasvalue",true);
-                g("tags").appendChild(tag);
-                sel.hide();
-            }
-            sel.show();
-        }
-        if(tag.data.type=="number"){
-            window.md = createModal("Nhập số liệu");
-            md.context = tag;
-            var min = tag.data.valuerange.min;
-            var max = tag.data.valuerange.max;
-            md.body().innerHTML = `Nhập số liệu cho ${tag.data.name}:<br>
-                <input class="form-control" type="number" id="ip-tvl" min="${min}" max="${max}" placeholder="Nhập số, tối thiểu ${min}, tối đa ${max}">
-                <br><center><button class="btn btn-primary" onclick="closeMdAddVal()">Xác nhận</button></center>`;
-            md.show();
-        }
-        if(tag.data.type == 'string'){
-            window.md = createModal("Nhập giá trị");
-            md.context = tag;
-            md.body().innerHTML = `Nhập số liệu cho ${tag.data.name}:<br>
-                <input class="form-control" type="text" id="ip-tvl" placeholder="Nhập giá trị">
-                <br><center><button class="btn btn-primary" onclick="closeMdAddVal()">Xác nhận</button></center>`;
-            md.show();
-        }
-        if(tag.data.type == 'have'){
-            tag.setAttribute("hasvalue",true);
-            g("tags").appendChild(tag);
-        }
-    }
-    function closeMdAddVal(){
-        var tag = md.context;
-        var value = val("tvl");
-        if(tag.data.type == "number"){
-            var n = parseInt(value);
-            if(n > tag.data.valuerange.max || n < tag.data.valuerange.min){
-                alert("Giá trị ngoài phạm vi cho phép.");
-                return false;
-            }
-        }
-        if(tag.data.type == "string"){
-            if(value.length < 1){
-                alert("Vui lòng nhập giá trị.");
-                return false;
-            }
-        }
-        tag.setAttribute("value",value);
-        tag.setAttribute("hasvalue",true);
-        g("tags").appendChild(tag);
-        md.hide();
-    }
-    function ctb_AddAns(btn){
-        var row = btn.parentElement.parentElement;
-        var clone = document.createElement("div");
-        clone.innerHTML = row.outerHTML;
-        clone.querySelector("input").value="";
-        var btn = clone.querySelector(".input-group-append button");
-        btn.innerHTML = `<i class="fa fa-times"></i>`;
-        btn.className="btn btn-primary";
-        row.parentElement.appendChild(clone.children[0]);
-    }
-    function ctb_RemAns(btn){
-        var row = btn.parentElement.parentElement;
-        var f= findForm(btn);
-        if(f.children.length < 3){
-            return false;
-        }
-        row.remove();
-    }
-    function findForm(btn){
-        while(btn.tagName!="FORM"){
-            btn=btn.parentElement;
-        }
-        return btn;
-    }
-    function ctb_MarkRight(btn){
-        var f = findForm(btn);
-        var fa = `<i class="fa fa-times"></i>`;
-        var tr = `<i class="fa fa-check"></i>`;
-        f.querySelectorAll(".input-group-append button").forEach(b=>{
-            b.className="btn btn-primary";
-            b.innerHTML=fa;
-        });
-        btn.className="btn btn-success";
-        btn.innerHTML=tr;
-    }
-    function cat_AddAns(btn){
-        var row = btn.parentElement.parentElement;
-        var clone = document.createElement("div");
-        clone.innerHTML = row.outerHTML;
-        clone.querySelector("input").value="";
-        row.parentElement.appendChild(clone.children[0]);
-    }
-    function cat_MarkRight(btn){
-        var fa = `<i class="fa fa-times"></i>`;
-        var tr = `<i class="fa fa-check"></i>`;
-        if(btn.className.indexOf("success")>0){
-            btn.className="btn btn-primary";
-            btn.innerHTML=fa;
-        }else{
-            btn.className="btn btn-success";
-            btn.innerHTML=tr;
-        }
-    }
-    function changeqtype(t){
-        if(!g(t).hasAttribute("hidden")){
-            return;
-        }
-        g("tabdiv").children.forEach(e=>{if(e.id!=t){e.setAttribute("hidden",true)}else{e.removeAttribute("hidden")}});
-        this.qtype = t;
-    }
+    
+    
     tinymce.init({
         selector:'#questtext',
         plugins:"image codesample table",
+        setup: function(editor) {
+            editor.on('keydown', function(e) {
+                if(e.keyCode==9){
+                    e.preventDefault();
+                    switch(qtype){
+                        case "choosethebest":
+                            q("#ctb-ans")[0].querySelector("input").focus();
+                            break;
+                        case "checkalltrue":
+                            q("#cat-ans")[0].querySelector("input").focus();
+                            break;
+                        case "askandanswer":
+                            q("#aaa-ans")[0].focus();
+                            break;
+                        case "putinplace":
+                            break;
+                        case "connectpair":
+                            break;
+                    }
+                }
+            });
+        },
         external_plugins: {
-            'tiny_mce_wiris': `//localhost/mathtype.js`,
+            'tiny_mce_wiris': `http://localhost:8000/mathtype.js`,
         },
         
         htmlAllowedTags: ['.*'],
@@ -398,7 +364,15 @@ include "header.htm";
         toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image table codesample tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry'
 
     });
-    
+    <? if($idcauhoi) { ?>
+        var quest = <?=json_encode($cauhoi)?>;
+        changeqtype(quest.type);
+        if(window[quest.type]){
+            window[quest.type].fromData(quest.data);
+        }
+        parseTag(quest.tieuchi);
+        g("questtype").value = quest.type;
+    <? } ?>
 </script>
 <?
 include "footer.htm";

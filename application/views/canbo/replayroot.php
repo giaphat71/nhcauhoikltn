@@ -54,7 +54,7 @@ include "header.htm";
                     <div style="float:right;">
                         <? if(!isset($idresult)) { ?> <button class="btn btn-primary" onclick="saveAsRoot(this)">Lưu đề gốc</button> <? } ?>
                         <button class="btn btn-primary" onclick="printThis(this)">In đề này</button>
-                        <button class="btn btn-primary" onclick="showAnswer2(this)">Xem đáp án</button>
+                        <button class="btn btn-primary" onclick="showAnswer(this)">Xem đáp án</button>
                     </div>
                 </h1>
             <?
@@ -69,14 +69,19 @@ include "header.htm";
         } 
     ?>
 </div>
-<script src="/javascripts/questedit.js"></script>
 <script>
-    function showAnswer2(btn){
+    function showAnswer(btn){
         if(btn.textContent.contain("Xem")){
-            showAnswer();
+            q(".showans + [quest=choosable]").forEach(e=>{
+                var ansindex = e.previousElementSibling.textContent;
+                e.children[parseInt(ansindex)].classList.add("showans");
+            });
             btn.textContent = "Ẩn đáp án";
         }else{
-            hideAnswer();
+            q(".showans + [quest=choosable]").forEach(e=>{
+                var ansindex = e.previousElementSibling.textContent;
+                e.children[parseInt(ansindex)].classList.remove("showans");
+            });
             btn.textContent = "Xem đáp án";
         }
         
@@ -92,14 +97,8 @@ include "header.htm";
         var header = getQuestHeader(btn);
         var id = header.id.split("-")[1];
         var idresult =header.getAttribute("idresult");
-        var runcount = prompt("Nhập số đề xuất ra: ",1);
-        runcount = parseInt(runcount);
-        if(runcount < 1){
-            return alert("Số đề xuất ra phải lớn hơn 0");
-        }
-        var url = "/canbo/print?idchallenge="+id+"&idresult="+idresult+"&idmonhoc=<?=$idmonhoc?>&runcount="+runcount;
+        var url = "/canbo/print?idchallenge="+id+"&idresult="+idresult+"&idmonhoc=<?=$idmonhoc?>";
         var win = window.open(url, '_blank');
-       
         win.focus();
     }
     function saveAsRoot(btn){

@@ -1,7 +1,8 @@
 <?
 checkLogin();
-$listmh = [];
-
+$catid="tk";
+$page = $_GET['page'] ?? 0;
+$page = intval($page);
 include "header.htm" ?>
     <style>
         .monhoc{
@@ -30,6 +31,7 @@ include "header.htm" ?>
             padding: 8px;
         }
     </style>
+    <? if($page < 1) { ?>
     <div class="section bg-light">
         <div class="section-title">Câu hỏi</div>
         <div class="section-body">
@@ -105,4 +107,50 @@ include "header.htm" ?>
             </div>
         </div>
     </div>
+    <? } ?>
+    <div class="section bg-light">
+        <div class="section-title">Các đề được tạo</div>
+        <div class="section-body">
+            <table class="table table-hover bg-white">
+                <thead>
+                    <tr>
+                        <td>Cán bộ</td>
+                        <td>Môn học</td>
+                        <td>Ma trận</td>
+                        <td>Số câu hỏi</td>
+                        <td>Kết quả</td>
+                    </tr>
+                </thead>
+                <tbody>
+                <? 
+                $list = buildSearch()
+                                ->leftJoin("users","users.id=runner")
+                                ->leftJoin("monhoc","monhoc.id=idmonhoc")
+                                ->leftJoin("matrix","matrix.id=idmatrix")
+                                ->project("matrixresult.*,users.name as uname,monhoc.name as mname,matrix.name as mxname,matrix.questioncount as questcount")
+                                ->limit(10)->paginate(10,$page)->sort("matrixresult.id DESC")->exec("matrixresult");
+                if($list){
+                    $total = getTotalRow($list);
+                    for($i=0; $i<count($list); $i++){  ?>
+                        <tr>
+                            <td><?=$list[$i]->uname?></td>
+                            <td><?=$list[$i]->mname?></td>
+                            <td><?=$list[$i]->mxname?></td>
+                            <td><?=$list[$i]->questcount?></td>
+                            <td><a href="/canbo/runmatrix/<?=$list[$i]->idmonhoc?>/<?=$list[$i]->idmatrix?>/?idresult=<?=$list[$i]->id?>">Xem kết quả</a></td>
+                        </tr>
+                    <? } 
+                }else{
+                    $total = 0;
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <?=renderPagination($total,$page,10,"/admin/thongke?page={i}")?>
+        </div>
+    </div>
+    <script>
+    </script>
 <? include "footer.htm" ?>

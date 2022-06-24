@@ -2,7 +2,7 @@
 checkLogin();
 $listmh = buildSearch(['idcanbo'=>$idcanbo])
     ->project("monhoc.*, count(cauhoi.id) as num,permission.id as _id,permission.islocked")
-    ->leftJoin("cauhoi","cauhoi.idmonhoc=permission.idmonhoc")
+    ->leftJoin("cauhoi","cauhoi.idmonhoc=permission.idmonhoc AND cauhoi.author=permission.idcanbo")
     ->groupBy("permission.idmonhoc")
     ->leftJoin("monhoc","monhoc.id=permission.idmonhoc")
     ->limit(999)

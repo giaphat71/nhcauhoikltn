@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/all.min.css">
     <link rel="stylesheet" href="/bootstrap.min.css?origin=">
     <link rel="stylesheet" href="/font.css?v=2">
-
+    <link rel="stylesheet" href="/stylesheets/style.css">
     <script type="text/javascript" src="/stv.ui.js?v=1.181"></script>
     <script src="/bootstrap.min.js"></script>
     
@@ -46,18 +46,33 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="navbar d-flex p-2">
-        <img id="logo" src="http://qldt.tgu.edu.vn/templates/tgu/images/banner.png">
+<div class="container bg-light" style="min-height: 100vh;padding:0;box-shadow: 0 0 4px gray;">
+    <div id="pageheader" class="navbar d-flex p-2">
+        <img onclick="location.href='/canbo'" id="logo" src="http://qldt.tgu.edu.vn/templates/tgu/images/banner.png">
         <div style="flex:1;text-align:right;">
             <div style="position: relative;display:inline-block;">
-                <input id="search" type="text" placeholder="Tìm kiếm">
+                <!-- <input id="search" type="text" placeholder="Tìm kiếm">
                 <span style="font-size:20px;position:absolute;right:5px;top:0;cursor: pointer;">
                     <i class="fa fa-search"></i>
-                </span>
+                </span> -->
+                <?php
+                    if(isAdmin()){
+                        ?>
+                        <span onclick="location='/admin'" style="font-size:20px;cursor: pointer;color: white;margin-right: 10px;">
+                            Trang quản trị
+                        </span> 
+                        <?
+                    }
+                ?>
+                <span onclick="location='/canbo'" style="font-size:20px;cursor: pointer;color: white;margin-right: 10px;">
+                    Môn học của tôi
+                </span> 
+                <span onclick="location='/canbo/lichsu'" style="font-size:20px;cursor: pointer;color: white;margin-right: 20px;">
+                    Lịch sử hoạt động
+                </span> 
             </div>
             <div style="position: relative;display:inline-block;">
-                <img id="avatar" src="http://sangtacviet.com/default.png">
+                <img id="avatar" onclick="location.href='/canbo/info'" src="http://sangtacviet.com/default.png">
                 <div style="display: none;position: absolute;">
                     
                 </div>

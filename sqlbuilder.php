@@ -4,7 +4,8 @@ define('outputSql',false);
 define('jsonMapper',[
     "cauhoi"=>["tieuchi","data"],
     "monhoc"=>["chuongtrinh"],
-    "matrix"=>['data']
+    "matrix"=>['data'],
+    "users"=>['perm']
 ]);
 function autoMapJsonToQuery($query,$table){
     if(array_key_exists($table,jsonMapper)){
@@ -24,10 +25,12 @@ class SearchQuery{
     public $group = "";
     public $jsonCol = [];
     public $pagi = "";
+    // tự động chuyển cột thành object khi lấy dữ liệu
     public function asJson($col){
         $this->jsonCol[] = $col;
         return $this;
     }
+    // chuyển tên cột thành dạng cột của mysql trước khi thực hiện sql ( từ abc.xyz thành `abc`.`xyz`)
     public function getColName($c){
         if(strpos($c,'.')!==false){
             $tc = explode('.',$c);
@@ -35,6 +38,7 @@ class SearchQuery{
         }
         return "`".$c."`";
     }
+    // chuyển các điều kiện đã sử dụng thành câu lệnh sql
     public function parseWhere($w)
     {
         if(is_string($w)){
@@ -74,6 +78,8 @@ class SearchQuery{
                     $s = "$colname LIKE '%". sqlescape($w[1][1]) ."%' ";
                 }elseif($mode == "NOT LIKE"){
                     $s = "$colname NOT LIKE '%". sqlescape($w[1][1]) ."%' ";
+                }elseif($mode == "exp" || $mode == "?"){
+                    $s = "$colname ". $w[1][1];
                 }else{
                     if(is_string($w[1][1])){
                         $s = "$colname $mode '". sqlescape($w[1][1]) ."'";
@@ -91,6 +97,7 @@ class SearchQuery{
         }
         return $s;
     }
+    // thêm điều kiện
     public function add($key, $value, $number=false){
         if($number){
             $this->where[] = [$key,(int)$value];
@@ -98,10 +105,12 @@ class SearchQuery{
         $this->where[] = [$key,$value];
         return $this;
     }
+    // thêm điều kiện like
     public function addLike($key, $value){
         $this->where[] = [$key,["LIKE",$value]];
         return $this;
     }
+    // thêm các điều kiện đặc thù như IN, BETWEEN, ...
     public function addMode($key, $mode,$value, $number=false){
         if($number){
             $this->where[] = [$key,[$mode,(int)$value]];
@@ -109,6 +118,7 @@ class SearchQuery{
         $this->where[] = [$key,[$mode,$value]];
         return $this;
     }
+    // thêm điều kiện NOT
     public function addNot($key, $value, $number=false){
         if($number){
             $this->where[] = [$key,["<>",(int)$value]];
@@ -116,24 +126,29 @@ class SearchQuery{
         $this->where[] = [$key,["<>",$value]];
         return $this;
     }
+    // thêm điều kiện NOT LIKE
     public function addNotLike($key, $value){
         $this->where[] = [$key,["NOT LIKE",$value]];
         return $this;
     }
+    // thêm nhiều điều kiện cùng lúc
     public function adds($arr){
         foreach($arr as $key=>$value){
             $this->where[] = [$key,$value];
         }
         return $this;
     }
+    // thêm giới hạn LIMIT số kết quả trả về
     public function limit($l){
         $this->limit = $l;
         return $this;
     }
+    // chỉ định kết quả trả về, vd: id, name, ..., mặc định là *
     public function project($project){
         $this->projection = $project;
         return $this;
     }
+    // chia kết quả thành các trang LIMIT OFFSET, tự động lưu trữ tổng số kết quả
     public function paginate($perpage,$p){
         if((int)$p > 0){
             $this->offset = $perpage * $p;
@@ -143,14 +158,17 @@ class SearchQuery{
         $this->pagi = ", count(1) OVER() AS total";
         return $this;
     }
+    // thực hiện sắp xếp kết quả
     public function sort($v){
         $this->order = $v;
         return $this;
     }
+    // nhóm các kết quả
     public function groupBy($v){
         $this->group = $v;
         return $this;
     }
+    // đúc kết các điều kiện thành câu lệnh sql
     public function getSql($table){
         $s = "SELECT ".$this->projection.$this->pagi." FROM $table ";
         if(count($this->join) > 0){
@@ -199,10 +217,12 @@ class SearchQuery{
         return $s;
         
     }
+    // truy vấn nhiều bảng
     public function leftJoin($table, $conditions){
         $this->join[] = [$table,$conditions];
         return $this;
     }
+    // thực hiện truy vấn và trả về kết quả với tên bảng
     public function exec($table,$assoc = false){
         autoMapJsonToQuery($this,$table);
         $db = newmysql();
@@ -214,10 +234,11 @@ class SearchQuery{
         if($rs->num_rows == 0){
             return null;
         }
-        if($rs->num_rows == 1){
+        if($rs->num_rows == 1 && !$this->order && !$this->offset && !$this->limit){
             $arr = $rs->fetch_assoc();
             if(count($this->jsonCol) > 0){
                 foreach($this->jsonCol as $c){
+                    if(array_key_exists($c,$arr))
                     $arr[$c] = json_decode($arr[$c],$assoc);
                 }
             }
@@ -258,6 +279,7 @@ class SearchQuery{
             return $arr;
         }
     }
+    // thực hiện truy vấn và trả về kết quả có thể dùng vòng lặp
     public function execEnum($table){
         autoMapJsonToQuery($this,$table);
         $db = newmysql();
@@ -269,6 +291,7 @@ class SearchQuery{
         return $rs;
     }
 }
+// tương tự với các câu lệnh khác
 class DeleteQuery{
     public $limit = 0;
     public $where = [];
@@ -408,10 +431,11 @@ class UpdateQuery{
         return $this;
     }
     public function clean(){
-        for($i = 0 ;$i<$this->updateparam;$i++){
-            if($this->updateparam[$i]."" == ""){
-                array_splice($this->updateparam,$i,1);
-                $i--;
+        foreach($this->updateparam as $key=>$value){
+            if(in_array($key,$this->jsonCol)){
+            }else
+            if($value."" == ""){
+                array_splice($this->updateparam,$key,1);
             }
         }
         return $this;
@@ -646,24 +670,37 @@ class InsertQuery{
         return $db->insert_id;
     }
 }
+// xây dựng câu lệnh select với điều kiện
 function buildSearch($where=[]){
     $q = new SearchQuery();
     $q->adds($where);
     return $q;
 }
+// xây dựng câu lệnh insert
 function buildInsert($insert){
     $q = new InsertQuery();
     $q->adds($insert);
     return $q;
 }
+// xây dựng câu lệnh update
 function buildUpdate($where=[],$update=[]){
     $q = new UpdateQuery();
     $q->adds($where);
     $q->updates($update);
     return $q;
 }
+// xây dựng câu lệnh delete
 function buildDelete($where){
     $q = new DeleteQuery();
     $q->adds($where);
     return $q;
+}
+// lấy tổng số dòng khi dùng select
+function getTotalRow($rs){
+    $total = 0;
+    if(!$rs)return 0;
+    if(count($rs)>0){
+        $total = $rs[0]->total;
+    }
+    return $total;
 }

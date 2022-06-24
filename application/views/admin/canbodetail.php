@@ -1,6 +1,9 @@
 <?
 checkLogin();
 $u = getUser($idcanbo);
+if(!$u){
+    show_404();
+}
 $catid="qlcb";
 include "header.htm" ?>
     <style>
@@ -32,6 +35,7 @@ include "header.htm" ?>
     </style>
     <div class="section bg-light">
         <div class="section-title">Thông tin cán bộ</div>
+        <button onclick="location='/admin/canbo/<?=$idcanbo?>/quyen'" class="btn btn-primary" style="float:right;">Sửa quyền hạn</button>
         <div class="section-body">
             <p>Tài khoản</p>
             <input class="form-control" type="text" id="account" value="<?=$u->account?>" disabled>
@@ -41,10 +45,31 @@ include "header.htm" ?>
             <p>Đơn vị</p>
             <input class="form-control" type="text" id="nganh" value="<?=$u->donvi?>"><br>
             <p>Avatar</p>
-            <input class="form-control" type="text" id="avatar" value="<?=$u->avatar?>"><br>
-            <center><button class="btn btn-primary">Lưu trữ</button></center>
+            <input class="form-control" type="text" id="iavatar" value="<?=$u->avatar?>"><br>
+            <center><button class="btn btn-primary" onclick="saveInfo()">Cập nhật</button></center>
         </div>
     </div>
     <script>
+        function saveInfo(){
+            var name = $("#name").val();
+            var nganh = $("#nganh").val();
+            var avatar = $("#iavatar").val();
+            $.ajax({
+                url: "/admin/ajax",
+                type: "POST",
+                data: {
+                    id: <?=$idcanbo?>,
+                    name: name,
+                    donvi: nganh,
+                    avatar: avatar,
+                    ajax: "updatecanbo"
+                },
+                success: function(data){
+                    if(data == "success"){
+                        alert("Cập nhật thành công");
+                    }
+                }
+            });
+        }
     </script>
 <? include "footer.htm" ?>

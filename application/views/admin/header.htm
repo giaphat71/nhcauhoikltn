@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/all.min.css">
     <link rel="stylesheet" href="/bootstrap.min.css?origin=">
     <link rel="stylesheet" href="/font.css?v=2">
-
+    <link rel="stylesheet" href="/stylesheets/style.css">
     <script type="text/javascript" src="/stv.ui.js?v=1.181"></script>
     <script src="/bootstrap.min.js"></script>
     
@@ -64,14 +64,9 @@
     <div class="navbar d-flex p-2">
         <img id="logo" src="http://qldt.tgu.edu.vn/templates/tgu/images/banner.png">
         <div style="flex:1;text-align:right;">
+            <div style="position: relative;display:inline-block;"></div>
             <div style="position: relative;display:inline-block;">
-                <input id="search" type="text" placeholder="Tìm kiếm">
-                <span style="font-size:20px;position:absolute;right:5px;top:0;cursor: pointer;">
-                    <i class="fa fa-search"></i>
-                </span>
-            </div>
-            <div style="position: relative;display:inline-block;">
-                <img id="avatar" src="http://sangtacviet.com/default.png">
+                <img id="avatar" src="<?=$_SESSION['avatar']?>" onclick="location.href='/admin/account'">
                 <div style="display: none;position: absolute;">
                     
                 </div>
@@ -80,12 +75,16 @@
     </div>
     <div class="row" style="padding: 0 15px;">
     <div id="adminnav" class="col-3">
+        <!-- Mặc định là home -->
         <? $catid=$catid??"home";?>
         <a href="/admin/" <?=($catid=="home")?"active":""?>>Trang chủ</a>
         <a href="/admin/monhoc" <?=$catid=="qlmh"?"active":""?>>Quản lý môn học</a>
         <a href="/admin/canbo" <?=$catid=="qlcb"?"active":""?>>Quản lý cán bộ</a>
         <a href="/admin/tieuchi" <?=$catid=="qltc"?"active":""?>>Quản lý tiêu chí</a>
         <a href="/admin/thongke" <?=$catid=="tk"?"active":""?>>Thống kê</a>
+        <a href="/admin/history" <?=$catid=="ht"?"active":""?>>Lịch sử</a>
         <a href="/admin/account" <?=$catid=="acc"?"active":""?>>Tài khoản</a>
+        <hr>
+        <a href="/canbo">Trang người dùng</a>
     </div>
     <div id="admincontent" class="col-9 bg-light" style="padding:0;border-right: 2px solid #0f5491;min-height: 100vh;">
